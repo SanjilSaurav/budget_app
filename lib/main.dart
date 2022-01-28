@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -80,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
           children: [
             SizedBox(
-              height: 300,
+              height: 320,
               child: Stack(
                 children: [
                   Container(
@@ -134,10 +135,38 @@ class _MyHomePageState extends State<MyHomePage> {
                   Align(
                     alignment: AlignmentDirectional.bottomStart,
                     child: Container(
-                      height: 80,
+                      padding: const EdgeInsets.all(15),
+                      height: 100,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text("Budget: "),
+                              Text("$budget",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const LinearProgressIndicator(
+                            backgroundColor: Colors.red,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text("Remaining Budget: "),
+                              Text("$remainingBudget",
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   )
@@ -154,6 +183,22 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu),
+            label: 'Menu'
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: 'Categories'
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.pie_chart_rounded),
+              label: 'Expenses'
+          ),
+        ],
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
