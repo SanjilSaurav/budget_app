@@ -43,7 +43,22 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onTapped(int index){
     setState(() {
       /*if(index==0){
-
+        Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                ),
+                child: Text("Hello Drawer"),
+              ),
+              ListTile(
+                title: const Text("Item 1"),
+              ),
+            ],
+          ),
+        );
       }*/
       if(index==1){
         Navigator.pushNamed(context, categorySettingId);
