@@ -1,3 +1,4 @@
+import 'package:budget_app/screens/routing.dart';
 import 'package:flutter/material.dart';
 
 class CategorySetting extends StatefulWidget{
@@ -12,6 +13,7 @@ class _CategorySettingState extends State<CategorySetting> {
 
   void _tappedIncome(){
     print("Income");
+    print(MediaQuery.of(context).size.width);
     setState(() {
       isExpense = false;
     });
@@ -65,7 +67,7 @@ class _CategorySettingState extends State<CategorySetting> {
             ),
           ),
           Flexible(
-            child: isExpense ? ExpensesCategories() : IncomeCategories(),
+            child: isExpense ? const ExpensesCategories() : const IncomeCategories(),
           )
         ],
       ),
@@ -104,7 +106,9 @@ class _ExpensesCategoriesState extends State<ExpensesCategories>{
         ),
         child: FloatingActionButton(
           backgroundColor: Colors.white,
-          onPressed: (){},
+          onPressed: (){
+            Navigator.pushNamed(context, addCategoryId);
+          },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0))
           ),
@@ -157,7 +161,9 @@ class _IncomeCategoriesState extends State<IncomeCategories>{
           ),
           child: FloatingActionButton(
               backgroundColor: Colors.white,
-              onPressed: (){},
+              onPressed: (){
+                Navigator.pushNamed(context, addCategoryId);
+              },
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(15.0))
               ),
