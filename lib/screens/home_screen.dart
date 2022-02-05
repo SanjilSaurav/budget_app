@@ -156,7 +156,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                         ),
                         const LinearProgressIndicator(
-                          //backgroundColor: Colors.red,
+                          backgroundColor: Colors.red,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                          value: 60.0,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -199,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.pie_chart_rounded),
-              label: 'Expenses'
+              label: 'Charts'
           ),
         ],
         onTap: _onTapped,
