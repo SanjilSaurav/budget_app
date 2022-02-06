@@ -29,6 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int budget = 0;
   int income = 0;
   int remainingBudget = 0;
+  //GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _incrementCounter() {
     setState(() {
@@ -78,6 +79,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      drawer: SideDrawer(),
+      /*appBar: AppBar(
+        title: Text("Hello"),
+      ),*/
       backgroundColor: Colors.grey,
       body: Column(
         children: [
@@ -155,10 +160,16 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ],
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         const LinearProgressIndicator(
                           backgroundColor: Colors.red,
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                           value: 60.0,
+                        ),
+                        SizedBox(
+                          height: 10,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -207,6 +218,50 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _onTapped,
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class SideDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: <Widget>[
+          DrawerHeader(
+            child: Center(
+              child: Text(
+                'Side menu  FlutterCorner',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.black,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
+            onTap: () => {},
+          ),
+          ListTile(
+            leading: Icon(Icons.shopping_cart),
+            title: Text('Cart'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.border_color),
+            title: Text('Feedback'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+        ],
+      ),
     );
   }
 }

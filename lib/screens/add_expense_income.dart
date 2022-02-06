@@ -8,6 +8,17 @@ class AddExpenseIncome extends StatefulWidget{
 }
 
 class _AddExpenseIncomeState extends State<AddExpenseIncome>{
+
+  /*void createBottomSheet(){
+    Scaffold.of(context).showBottomSheet<void>(BuildContext context){
+      return Container(
+        child: Center(
+          //chil
+        )
+      );
+    };
+  }*/
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -23,7 +34,8 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
             child: Row(
               children: [
                 RaisedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                  },
                   child: const Text("Transportation",
                     style: TextStyle(
                       fontSize: 20,
@@ -145,10 +157,27 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                 ),
               ],
             ),
+          ),
+          Flexible(
+            child: CreateBottomSheet()
           )
         ],
       ),
     );
   }
 
+}
+
+class CreateBottomSheet extends StatefulWidget{
+  const CreateBottomSheet({Key? key}): super(key: key);
+
+  @override
+  _CreateBottomSheetState createState() => _CreateBottomSheetState();
+}
+
+class _CreateBottomSheetState extends State<CreateBottomSheet>{
+  @override
+  Widget build(BuildContext context){
+    return Scaffold();
+  }
 }
