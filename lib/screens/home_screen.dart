@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int budget = 0;
   int income = 0;
   int remainingBudget = 0;
-  //GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldKEy = GlobalKey<ScaffoldState>();
 
   void _incrementCounter() {
     setState(() {
@@ -43,24 +43,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   void _onTapped(int index){
     setState(() {
-      /*if(index==0){
-        Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                ),
-                child: Text("Hello Drawer"),
-              ),
-              ListTile(
-                title: const Text("Item 1"),
-              ),
-            ],
-          ),
-        );
-      }*/
+      if(index == 0){
+        _scaffoldKEy.currentState?.openDrawer();
+      }
       if(index==1){
         Navigator.pushNamed(context, categorySettingId);
       }
@@ -79,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      key: _scaffoldKEy,
       drawer: SideDrawer(),
       /*appBar: AppBar(
         title: Text("Hello"),
@@ -160,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         const LinearProgressIndicator(
@@ -168,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                           value: 60.0,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
@@ -223,41 +209,97 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class SideDrawer extends StatelessWidget {
+  const SideDrawer({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
+      child: ListView(
         children: <Widget>[
-          DrawerHeader(
+          const DrawerHeader(
             child: Center(
               child: Text(
-                'Side menu  FlutterCorner',
+                '',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 25),
               ),
             ),
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: Colors.blue,
             ),
           ),
+          const Text("VIP",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
+            leading: Icon(Icons.remove_done),
+            title: const Text('Remove all Ads',
+              style: TextStyle(fontSize: 18),
+            ),
             onTap: () => {},
           ),
           ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text('Cart'),
+            leading: Icon(Icons.color_lens),
+            title: const Text('Switch Colors',
+              style: TextStyle(fontSize: 18),
+            ),
             onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
-            leading: Icon(Icons.border_color),
-            title: Text('Feedback'),
+            leading: Icon(Icons.explicit_outlined),
+            title: const Text('Excel Export',
+              style: TextStyle(fontSize: 18),
+            ),
             onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
+            leading: Icon(Icons.dark_mode),
+            title: const Text('Dark Theme',
+              style: TextStyle(fontSize: 18),
+            ),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.search),
+            title: const Text('Search',
+              style: TextStyle(fontSize: 18),
+            ),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          const Divider(thickness: 2,),
+          ListTile(
+            leading: Icon(Icons.restore_from_trash),
+            title: const Text('Backup/Restore',
+              style: TextStyle(fontSize: 18),
+            ),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.cached_rounded),
+            title: const Text('Check Update',
+              style: TextStyle(fontSize: 18),
+            ),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.star),
+            title: const Text('Grade',
+              style: TextStyle(fontSize: 18),
+            ),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.share),
+            title: const Text('Share',
+              style: TextStyle(fontSize: 18),
+            ),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: const Text('Setting',
+              style: TextStyle(fontSize: 18),
+            ),
             onTap: () => {Navigator.of(context).pop()},
           ),
         ],
