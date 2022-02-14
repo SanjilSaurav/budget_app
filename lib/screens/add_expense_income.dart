@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AddExpenseIncome extends StatefulWidget{
   const AddExpenseIncome({Key? key}) : super(key: key);
@@ -8,6 +9,9 @@ class AddExpenseIncome extends StatefulWidget{
 }
 
 class _AddExpenseIncomeState extends State<AddExpenseIncome>{
+  DateTime date = DateTime.now();
+  //DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+  //String todayDate = dateFormat.format(date);
 
   void createBottomSheet(){
     showModalBottomSheet(

@@ -19,6 +19,7 @@ class SqliteDb{
 
   static Future _onCreate(Database db, int t) async{
     await db.execute('CREATE TABLE CATEGORIES (categoryId INTEGER PRIMARY KEY,'
+      'incomeExpense TEXT,'
       'name TEXT)'
     );
     await db.execute('CREATE TABLE TRANSACTIONS (id INTEGER PRIMARY KEY,'
@@ -35,20 +36,28 @@ class SqliteDb{
     String folderPath = await getDatabasesPath();
     String path = join(folderPath, "budget.db");
 
-    var budgetDb = await openDatabase(
+    var dbClient = await openDatabase(
       path,
       version: 2,
       onConfigure: _onConfigure,
       onCreate: _onCreate,
     );
-    _db = budgetDb;
-    return budgetDb;
+    _db = dbClient;
+    return dbClient;
   }
 
+
+  /*static Future<dynamic> alterCategory(String categories, String columnName) async{
+    var dbClient = await db;
+    var count = await dbClient.execute("ALTER TABLE $categories ADD "
+        "COLUMN $columnName TEXT;");
+    return count;
+  }*/
+
   //Inserting into tables
-  static Future<int?> insertTransaction(Transactions newTransaction) async{
-    var budgetDatabase = await db;
-    int id = await budgetDatabase.insert("TRANSACTIONS", newTransaction.toMap());
+  static Future<int?> insertTransaction(Map<String, dynamic> newTransaction) async{
+    var dbClient = await db;
+    int id = await dbClient.insert("TRANSACTIONS", newTransaction);
     if(id != 0){
       return (id);
     }
@@ -57,9 +66,9 @@ class SqliteDb{
     }
   }
 
-  static Future<int?> insertCategory(Categories newCategory) async{
-    var budgetDatabase = await db;
-    int catId = await budgetDatabase.insert("CATEGORIES", newCategory.toMap());
+  static Future<int?> insertCategory(Map<String, dynamic> newCategory) async{
+    var dbClient = await db;
+    int catId = await dbClient.insert("CATEGORIES", newCategory);
     if(catId != 0){
       return (catId);
     }
@@ -70,8 +79,8 @@ class SqliteDb{
 
   //Reading from tables
   static Future<List<Transactions>> getAllTransactions() async{
-    var budgetDatabase = await db;
-    List<Map<String, dynamic>> transactionsFromDB = await budgetDatabase.query("TRANSACTIONS");
+    var dbClient = await db;
+    List<Map<String, dynamic>> transactionsFromDB = await dbClient.query("TRANSACTIONS");
     List<Transactions> transactionsAsObject = [];
     for (var map in transactionsFromDB){
       transactionsAsObject.add(Transactions.fromMap(map));
@@ -80,8 +89,8 @@ class SqliteDb{
   }
 
   static Future<List<Categories>> getAllCategories() async{
-    var budgetDatabase = await db;
-    List<Map<String, dynamic>> categoriesFromDB = await budgetDatabase.query("CATEGORIES");
+    var dbClient = await db;
+    List<Map<String, dynamic>> categoriesFromDB = await dbClient.query("CATEGORIES");
     List<Categories> categoriesAsObject = [];
     for (var map in categoriesFromDB){
       categoriesAsObject.add(Categories.fromMap(map));
@@ -91,8 +100,8 @@ class SqliteDb{
 
   //Updating tables
   static Future<bool> updateTransaction(Transactions transaction) async{
-    var budgetDatabase = await db;
-    int changes = await budgetDatabase.update("TRANSACTIONS",
+    var dbClient = await db;
+    int changes = await dbClient.update("TRANSACTIONS",
         transaction.toMap(),
         where: "transactionId = ?",
         whereArgs: [transaction.transactionId]);
@@ -100,8 +109,8 @@ class SqliteDb{
   }
 
   static Future<bool> updateCategory(Categories category) async{
-    var budgetDatabase = await db;
-    int changes = await budgetDatabase.update("CATEGORIES",
+    var dbClient = await db;
+    int changes = await dbClient.update("CATEGORIES",
         category.toMap(),
         where: "categoryId = ?",
         whereArgs: [category.categoryId]);
@@ -110,16 +119,16 @@ class SqliteDb{
 
   //Deleting from tables
   static Future<bool> deleteTransaction(Transactions transaction) async{
-    var budgetDatabase = await db;
-    int changes = await budgetDatabase.delete("TRANSACTIONS",
+    var dbClient = await db;
+    int changes = await dbClient.delete("TRANSACTIONS",
         where: "transactionId = ?",
         whereArgs: [transaction.transactionId]);
     return (changes == 1);
   }
 
   static Future<bool> deleteCategory(Categories category) async{
-    var budgetDatabase = await db;
-    int changes = await budgetDatabase.delete("CATEGORIES",
+    var dbClient = await db;
+    int changes = await dbClient.delete("CATEGORIES",
         where: "categoryId = ?",
         whereArgs: [category.categoryId]);
     return (changes == 1);

@@ -5,18 +5,18 @@ class Transactions{
     required this.category,
     required this.amount,
     required this.incomeExpense,
-    required this.transactionId,
+    this.transactionId,
     this.remark,
     this.date,
     this.time,
 });
-  String? category;
-  int? transactionId;
-  double? amount;
+  String category;
+  late int? transactionId;
+  double amount;
   DateTime? date;
   TimeOfDay? time;
   String? remark;
-  String? incomeExpense;
+  String incomeExpense;
 
   Map<String, dynamic> toMap(){
     Map<String, dynamic> transactionAsMap = {
@@ -48,15 +48,18 @@ class Transactions{
 class Categories{
   Categories({
     required this.name,
-    required this.categoryId,
+    this.categoryId,
+    required this.incomeExpense,
 });
-  int? categoryId;
+  late int? categoryId;
   String? name;
+  String incomeExpense;
 
   Map<String, dynamic> toMap(){
     Map<String, dynamic> catAsMap = {
       "categoryId": categoryId,
       "name": name,
+      //"incomeExpense": incomeExpense,
     };
     return (catAsMap);
   }
@@ -64,7 +67,8 @@ class Categories{
   static Categories fromMap(Map<String, dynamic> catAsMap){
     Categories categories = Categories(
       categoryId: catAsMap["categoryId"],
-      name: catAsMap["name"]
+      name: catAsMap["name"],
+      incomeExpense: catAsMap["incomeExpense"],
     );
     return categories;
   }
