@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:budget_app/sqlite.dart';
+import 'routing.dart' as routing;
 
 class AddExpenseIncome extends StatefulWidget{
   const AddExpenseIncome({Key? key}) : super(key: key);
@@ -9,8 +11,14 @@ class AddExpenseIncome extends StatefulWidget{
 }
 
 class _AddExpenseIncomeState extends State<AddExpenseIncome>{
-  DateTime date = DateTime.now();
-  //DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+  //var date = DateTime.now().toString();
+  var date = DateFormat.yMMMd().format(DateTime.now()).toString();
+  var time = DateFormat.jm().format(DateTime.now()).toString();
+  String category = "";
+  double amount= 0;
+  String remark ="";
+  String incomeExpense = "Expense";
+  //var dateFormat = new DateFormat('yyyy-MM-dd');
   //String todayDate = dateFormat.format(date);
 
   void createBottomSheet(){
@@ -27,6 +35,26 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async{
+          Map<String, dynamic> transaction = {
+            "amount": amount,
+            "remark": remark,
+            "date": date,
+            "time": time,
+            "category": category,
+            "incomeExpense": incomeExpense
+          };
+          int? transactionId = await SqliteDb.insertTransaction(transaction);
+          if(transactionId == null){
+            print("Failed");
+          }
+          else{
+            print("Success");
+            Navigator.pushNamedAndRemoveUntil(context, routing.addExpenseIncomeId, (route) => false);
+          }
+        },
       ),
       body:Builder(
         builder: (context) {
@@ -48,8 +76,8 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                             }
                         );
                       },*/
-                      child: const Text("Transportation",
-                        style: TextStyle(
+                      child: Text(category,
+                        style: const TextStyle(
                             fontSize: 20,
                             color: Colors.red,
                             fontWeight: FontWeight.bold
@@ -59,8 +87,11 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                     const SizedBox(
                       width: 10,
                     ),
-                    const Flexible(
+                    Flexible(
                         child: TextField(
+                          onChanged: (String value){
+                            amount = double.parse(value);
+                          },
                           textAlign: TextAlign.end,
                           style: TextStyle(fontSize: 25),
                           decoration: InputDecoration(
@@ -79,13 +110,17 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                     GestureDetector(
                       onTap: () {
                         print("tapped");
+                        setState(() {
+                          date = DateFormat.yMMMd().format(DateTime.now()).toString();
+                          time = DateFormat.jm().format(DateTime.now()).toString();
+                        });
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
                         height: 45,
                         color: Colors.grey,
                         child: Row(
-                          children: const [
+                          children: [
                             Icon(Icons.calendar_today_outlined,
                               size: 18,
                             ),
@@ -98,7 +133,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                             SizedBox(
                               width: 10,
                             ),
-                            Text("22 feb"),
+                            Text(date),
                             Align(
                               alignment: AlignmentDirectional.centerEnd,
                               child: Icon(Icons.navigate_next),
@@ -117,7 +152,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                         height: 45,
                         color: Colors.grey,
                         child: Row(
-                          children: const [
+                          children: [
                             Icon(Icons.access_time,
                               size: 18,
                             ),
@@ -130,7 +165,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                             SizedBox(
                               width: 10,
                             ),
-                            Text("8:00"),
+                            Text(time),
                             Align(
                               alignment: AlignmentDirectional.centerEnd,
                               child: Icon(Icons.navigate_next),
@@ -144,7 +179,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                       color: Colors.grey,
                       height: 45,
                       child: Row(
-                        children: const [
+                        children: [
                           Icon(Icons.edit),
                           SizedBox(
                             width: 10,
@@ -159,6 +194,9 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                           ),
                           Flexible(
                             child: TextField(
+                              onChanged: (String? value){
+                                remark = value ?? remark;
+                              },
                               decoration: InputDecoration(
                                 hintText: "Write a note",
                               ),
@@ -199,36 +237,60 @@ class _CreateBottomSheetState extends State<CreateBottomSheet>{
         GestureDetector(
           child: CategoryCard(category: "Food"),
           onTap: (){
+            setState(() {
+              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
+              cat.category="Food";
+            });
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Fruits"),
           onTap: (){
+            setState(() {
+              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
+              cat.category="Fruit";
+            });
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Transportation"),
           onTap: (){
+            setState(() {
+              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
+              cat.category="Transportation";
+            });
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Gym"),
           onTap: (){
+            setState(() {
+              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
+              cat.category="Gym";
+            });
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Gifts"),
           onTap: (){
+            setState(() {
+              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
+              cat.category="Gifts";
+            });
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Travel"),
           onTap: (){
+            setState(() {
+              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
+              cat.category="Travel";
+            });
             Navigator.pop(context);
           },
         ),

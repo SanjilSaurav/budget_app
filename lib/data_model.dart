@@ -14,7 +14,7 @@ class Transactions{
   late int? transactionId;
   double amount;
   DateTime? date;
-  TimeOfDay? time;
+  DateTime? time;
   String? remark;
   String incomeExpense;
 
@@ -59,7 +59,7 @@ class Categories{
     Map<String, dynamic> catAsMap = {
       "categoryId": categoryId,
       "name": name,
-      //"incomeExpense": incomeExpense,
+      "incomeExpense": incomeExpense,
     };
     return (catAsMap);
   }
