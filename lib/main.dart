@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
+        routing.myHomePageId: (context) => MyHomePage(title: "Budget"),
         routing.addExpenseIncomeId: (context) => AddExpenseIncome(),
         routing.categorySettingId: (context) => CategorySetting(),
         routing.chartId: (context) => Chart(),

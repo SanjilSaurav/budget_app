@@ -147,12 +147,13 @@ class ExpenseIncomeCard extends StatelessWidget{
   ExpenseIncomeCard({
     required this.category,
     required this.amount,
-    required this.count,
+    this.count,
     Key? key
   }):super(key: key);
 
   final String category;
-  final int amount,count;
+  final int amount;
+  int? count;
   double percentage = 0;
 
   @override

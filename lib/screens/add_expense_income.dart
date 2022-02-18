@@ -14,12 +14,18 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
   //var date = DateTime.now().toString();
   var date = DateFormat.yMMMd().format(DateTime.now()).toString();
   var time = DateFormat.jm().format(DateTime.now()).toString();
-  String category = "";
+  String category = "Food";
   double amount= 0;
   String remark ="";
   String incomeExpense = "Expense";
   //var dateFormat = new DateFormat('yyyy-MM-dd');
   //String todayDate = dateFormat.format(date);
+
+  void stateUpdate(){
+    setState(() {
+
+    });
+  }
 
   void createBottomSheet(){
     showModalBottomSheet(
@@ -37,6 +43,9 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
         elevation: 0,
       ),
       floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.check,
+          size: 25,
+        ),
         onPressed: () async{
           Map<String, dynamic> transaction = {
             "amount": amount,
@@ -52,7 +61,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
           }
           else{
             print("Success");
-            Navigator.pushNamedAndRemoveUntil(context, routing.addExpenseIncomeId, (route) => false);
+            Navigator.pushNamedAndRemoveUntil(context, routing.myHomePageId, (route) => false);
           }
         },
       ),
@@ -230,6 +239,7 @@ class CreateBottomSheet extends StatefulWidget{
 }
 
 class _CreateBottomSheetState extends State<CreateBottomSheet>{
+  _AddExpenseIncomeState cat = _AddExpenseIncomeState();
   @override
   Widget build(BuildContext context){
     return ListView(
@@ -237,60 +247,48 @@ class _CreateBottomSheetState extends State<CreateBottomSheet>{
         GestureDetector(
           child: CategoryCard(category: "Food"),
           onTap: (){
-            setState(() {
-              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
-              cat.category="Food";
-            });
+            cat.category = "Food";
+            //cat.stateUpdate();
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Fruits"),
           onTap: (){
-            setState(() {
-              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
-              cat.category="Fruit";
-            });
+            cat.category = "Fruits";
+            //cat.stateUpdate();
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Transportation"),
           onTap: (){
-            setState(() {
-              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
-              cat.category="Transportation";
-            });
+            cat.category = "Transportation";
+            //cat.stateUpdate();
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Gym"),
           onTap: (){
-            setState(() {
-              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
-              cat.category="Gym";
-            });
+            cat.category = "Gym";
+            //cat.stateUpdate();
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Gifts"),
           onTap: (){
-            setState(() {
-              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
-              cat.category="Gifts";
-            });
+            cat.category = "Gifts";
+            //cat.stateUpdate();
             Navigator.pop(context);
           },
         ),
         GestureDetector(
           child: CategoryCard(category: "Travel"),
           onTap: (){
-            setState(() {
-              _AddExpenseIncomeState cat = _AddExpenseIncomeState();
-              cat.category="Travel";
-            });
+            cat.category = "Travel";
+            //cat.stateUpdate();
             Navigator.pop(context);
           },
         ),

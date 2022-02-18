@@ -173,8 +173,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          Container(
-            color: Colors.green,
+          Flexible(
+            child: ListView(
+              children: [
+                ExpenseIncomeCard(category: "Food", amount: 400),
+                ExpenseIncomeCard(category: "Travel", amount: 800),
+                ExpenseIncomeCard(category: "Shopping", amount: 720),
+                ExpenseIncomeCard(category: "Salary", amount: 1200),
+              ],
+            ),
           ),
         ],
       ),
@@ -304,6 +311,42 @@ class SideDrawer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ExpenseIncomeCard extends StatelessWidget{
+  ExpenseIncomeCard({
+    required this.category,
+    required this.amount,
+    Key? key,
+  }): super(key: key);
+  final String category;
+  final double amount;
+
+  @override
+  Widget build(BuildContext context){
+    return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0)
+      ),
+    child: Container(
+      padding: EdgeInsets.all(10),
+      height: 70,
+      child: Row(
+        children: [
+          Expanded(
+              child: Text(category)
+          ),
+          Expanded(
+              child: Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Text('$amount'),
+              )
+          ),
+        ],
+      ),
+      )
     );
   }
 }
