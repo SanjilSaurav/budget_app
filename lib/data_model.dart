@@ -5,13 +5,13 @@ class Transactions{
     required this.category,
     required this.amount,
     required this.incomeExpense,
-    this.transactionId,
+    required this.transactionId,
     this.remark,
     this.date,
     this.time,
 });
   String category;
-  late int? transactionId;
+  int transactionId;
   double amount;
   DateTime? date;
   DateTime? time;
@@ -48,11 +48,11 @@ class Transactions{
 class Categories{
   Categories({
     required this.name,
-    this.categoryId,
+    required this.categoryId,
     required this.incomeExpense,
 });
-  late int? categoryId;
-  String? name;
+  int categoryId;
+  String name;
   String incomeExpense;
 
   Map<String, dynamic> toMap(){

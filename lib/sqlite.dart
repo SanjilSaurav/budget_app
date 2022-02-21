@@ -90,6 +90,7 @@ class SqliteDb{
 
   static Future<List<Categories>> getAllCategories() async{
     var dbClient = await db;
+    //await Future.delayed(Duration(seconds: 1));
     List<Map<String, dynamic>> categoriesFromDB = await dbClient.query("CATEGORIES");
     List<Categories> categoriesAsObject = [];
     for (var map in categoriesFromDB){

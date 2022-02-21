@@ -1,4 +1,5 @@
 //import 'package:budget_app/data_model.dart';
+import 'package:budget_app/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:budget_app/sqlite.dart';
 import 'routing.dart' as routing;
@@ -11,9 +12,29 @@ class AddCategory extends StatefulWidget{
 }
 
 class _AddCategoryState extends State<AddCategory>{
+  Categories category = Categories(
+      name: "",
+      categoryId: -1,
+      incomeExpense: "",
+  );
 
-  String incomeExpense = "Income";
-  String name = "";
+  void addNewCategory() async{
+    Map<String, dynamic> catAsMap = category.toMap();
+    catAsMap.remove("categoryId");
+    int? categoryId = await SqliteDb.insertCategory(catAsMap);
+    if(categoryId==null){
+      print("failed");
+    }
+    else{
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pushNamed(context, routing.categorySettingId);
+      print("success");
+    }
+  }
+
+  /*String incomeExpense = "Income";
+  String name = "";*/
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -33,21 +54,7 @@ class _AddCategoryState extends State<AddCategory>{
                   alignment: AlignmentDirectional.centerEnd,
                   child: GestureDetector(
                     child:Icon(Icons.check),
-                    onTap: ()async {
-                      Map<String, dynamic> category = {
-                        "name": name,
-                        "incomeExpense": incomeExpense,
-                      };
-                      int? categoryId = await SqliteDb.insertCategory(category);
-                      if (categoryId == null){
-                        print("Failed");
-                      }
-                      else{
-                        print("Success");
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, routing.categorySettingId, (route) => false);
-                      }
-                    },
+                    onTap: addNewCategory,
                   ),
                 )
             )
@@ -61,7 +68,7 @@ class _AddCategoryState extends State<AddCategory>{
             TextField(
               onChanged: (String? value){
                 print("changed");
-                name = value ?? name;
+                category.name = value ?? category.name;
               },
               decoration: const InputDecoration(
                 hintText: "Category Name"
@@ -70,7 +77,7 @@ class _AddCategoryState extends State<AddCategory>{
             TextField(
               onChanged: (String? value){
                 print("chaged2");
-                incomeExpense = value ?? incomeExpense;
+                category.incomeExpense = value ?? category.incomeExpense;
               },
               decoration: const InputDecoration(
                   hintText: "Income or Expense",

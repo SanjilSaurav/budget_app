@@ -1,4 +1,6 @@
+import 'package:budget_app/data_model.dart';
 import 'package:budget_app/screens/routing.dart';
+import 'package:budget_app/sqlite.dart';
 import 'package:flutter/material.dart';
 
 class CategorySetting extends StatefulWidget{
@@ -83,10 +85,40 @@ class ExpensesCategories extends StatefulWidget{
 }
 
 class _ExpensesCategoriesState extends State<ExpensesCategories>{
+
+  Future<List<Categories>> categoriesList = SqliteDb.getAllCategories();
+
+  Widget futureBuilderExpense(){
+    return(FutureBuilder<List<Categories>>(
+      future: categoriesList,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(snapshot.hasData){
+          var data = snapshot.data;
+          List<Widget> children = [];
+          for(var cat in data){
+            if(cat.incomeExpense == "Expense"){
+              children.add(CategoryCard(category: cat.name));
+            }
+          }
+          return ListView(
+            children: children,
+          );
+        }
+        else if(snapshot.hasError){
+          return Text("I have error data");
+        }
+        else{
+          return Text("Waiting");
+        }
+      },
+    ));
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      body: ListView(
+      body: futureBuilderExpense(),
+      /*ListView(
         children: const [
           CategoryCard(category: "Food"),
           CategoryCard(category: "Travel"),
@@ -95,7 +127,7 @@ class _ExpensesCategoriesState extends State<ExpensesCategories>{
           CategoryCard(category: "Shopping"),
           CategoryCard(category: "Gifts")
         ],
-      ),
+      ),*/
       floatingActionButton: Container(
         margin: EdgeInsets.only(left: 30),
         width: MediaQuery.of(context).size.width,
@@ -138,10 +170,41 @@ class IncomeCategories extends StatefulWidget{
 }
 
 class _IncomeCategoriesState extends State<IncomeCategories>{
+  Future<List<Categories>> categoriesList = SqliteDb.getAllCategories();
+
+  Widget futureBuilderIncome(){
+    return(FutureBuilder<List<Categories>>(
+      future: categoriesList,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(snapshot.hasData){
+          var data = snapshot.data;
+          List<Widget> children = [];
+          for(var cat in data){
+            if(cat.incomeExpense == "Income"){
+              children.add(CategoryCard(category: cat.name));
+            }
+          }
+          return ListView(
+            children: children,
+          );
+        }
+        else if(snapshot.hasError){
+          return Text("I have error data");
+        }
+        else{
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    ));
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      body: ListView(
+      body: futureBuilderIncome(),
+      /*ListView(
         children: const [
           CategoryCard(category: "Rental"),
           CategoryCard(category: "Divedends"),
@@ -150,7 +213,7 @@ class _IncomeCategoriesState extends State<IncomeCategories>{
           CategoryCard(category: "Rewards"),
           CategoryCard(category: "Others")
         ],
-      ),
+      ),*/
         floatingActionButton: Container(
           margin: EdgeInsets.only(left: 30),
           width: MediaQuery.of(context).size.width,
