@@ -7,14 +7,14 @@ class Transactions{
     required this.incomeExpense,
     required this.transactionId,
     this.remark,
-    this.date,
-    this.time,
+    required this.date,
+    required this.time,
 });
   String category;
   int transactionId;
   double amount;
-  DateTime? date;
-  DateTime? time;
+  String date;
+  String time;
   String? remark;
   String incomeExpense;
 

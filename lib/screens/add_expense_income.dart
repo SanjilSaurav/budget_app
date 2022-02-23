@@ -1,3 +1,4 @@
+import 'package:budget_app/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:budget_app/sqlite.dart';
@@ -12,12 +13,12 @@ class AddExpenseIncome extends StatefulWidget{
 
 class _AddExpenseIncomeState extends State<AddExpenseIncome>{
   //var date = DateTime.now().toString();
-  var date = DateFormat.yMMMd().format(DateTime.now()).toString();
-  var time = DateFormat.jm().format(DateTime.now()).toString();
-  String category = "Food";
-  double amount= 0;
-  String remark ="";
-  String incomeExpense = "Expense";
+  //var date = DateFormat.yMMMd().format(DateTime.now()).toString();
+  //var time = DateFormat.jm().format(DateTime.now()).toString();
+  static String cat = "category";
+  //double amount= 0;
+  //String remark ="";
+  static String incomeExpense = "";
   //var dateFormat = new DateFormat('yyyy-MM-dd');
   //String todayDate = dateFormat.format(date);
 
@@ -25,6 +26,27 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
     setState(() {
 
     });
+  }
+  Transactions transaction = Transactions(
+      category: cat,
+      amount: 0,
+      incomeExpense: incomeExpense,
+      transactionId: -1,
+      date: "",
+      time: ""
+  );
+
+  void addNewTransaction() async{
+    Map<String, dynamic> transactionAsMap = transaction.toMap();
+    transactionAsMap.remove("transactionId");
+    int? transactioinId = await SqliteDb.insertTransaction(transactionAsMap);
+    if(transactioinId == null){
+      print("Failed");
+    }
+    else{
+      Navigator.pushNamedAndRemoveUntil(context, routing.myHomePageId, (route) => false);
+      print("success");
+    }
   }
 
   void createBottomSheet(){
@@ -46,24 +68,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
         child: Icon(Icons.check,
           size: 25,
         ),
-        onPressed: () async{
-          Map<String, dynamic> transaction = {
-            "amount": amount,
-            "remark": remark,
-            "date": date,
-            "time": time,
-            "category": category,
-            "incomeExpense": incomeExpense
-          };
-          int? transactionId = await SqliteDb.insertTransaction(transaction);
-          if(transactionId == null){
-            print("Failed");
-          }
-          else{
-            print("Success");
-            Navigator.pushNamedAndRemoveUntil(context, routing.myHomePageId, (route) => false);
-          }
-        },
+        onPressed: addNewTransaction,
       ),
       body:Builder(
         builder: (context) {
@@ -85,7 +90,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                             }
                         );
                       },*/
-                      child: Text(category,
+                      child: Text(cat,
                         style: const TextStyle(
                             fontSize: 20,
                             color: Colors.red,
@@ -99,7 +104,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                     Flexible(
                         child: TextField(
                           onChanged: (String value){
-                            amount = double.parse(value);
+                            transaction.amount = double.parse(value);
                           },
                           textAlign: TextAlign.end,
                           style: TextStyle(fontSize: 25),
@@ -118,10 +123,9 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                   children: [
                     GestureDetector(
                       onTap: () {
-                        print("tapped");
+                        print(cat);
                         setState(() {
-                          date = DateFormat.yMMMd().format(DateTime.now()).toString();
-                          time = DateFormat.jm().format(DateTime.now()).toString();
+                          transaction.date = DateFormat.yMMMd().format(DateTime.now()).toString();
                         });
                       },
                       child: Container(
@@ -142,7 +146,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                             SizedBox(
                               width: 10,
                             ),
-                            Text(date),
+                            Text(transaction.date),
                             Align(
                               alignment: AlignmentDirectional.centerEnd,
                               child: Icon(Icons.navigate_next),
@@ -154,7 +158,10 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                     ),
                     GestureDetector(
                       onTap: () {
-                        print("tapped time");
+                        print(incomeExpense);
+                        setState(() {
+                          transaction.time = DateFormat.jm().format(DateTime.now()).toString();
+                        });
                       },
                       child: Container(
                         padding: const EdgeInsets.all(10),
@@ -174,7 +181,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                             SizedBox(
                               width: 10,
                             ),
-                            Text(time),
+                            Text(transaction.time),
                             Align(
                               alignment: AlignmentDirectional.centerEnd,
                               child: Icon(Icons.navigate_next),
@@ -204,7 +211,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                           Flexible(
                             child: TextField(
                               onChanged: (String? value){
-                                remark = value ?? remark;
+                                transaction.remark = value ?? transaction.remark;
                               },
                               decoration: InputDecoration(
                                 hintText: "Write a note",
@@ -239,60 +246,184 @@ class CreateBottomSheet extends StatefulWidget{
 }
 
 class _CreateBottomSheetState extends State<CreateBottomSheet>{
-  _AddExpenseIncomeState cat = _AddExpenseIncomeState();
+  //_AddExpenseIncomeState cat = _AddExpenseIncomeState();
+  bool isExpense = true;
+
+  Future<List<Categories>> categoriesList = SqliteDb.getAllCategories();
+
+  Widget futureBuilderCat(){
+    return(FutureBuilder<List<Categories>>(
+      future: categoriesList,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(snapshot.hasData){
+          var data = snapshot.data;
+          List<Widget> expenseChildren = [];
+          List<Widget> incomeChildren = [];
+          for(var cat in data){
+            if(cat.incomeExpense == "Expense"){
+              expenseChildren.add(
+                  GestureDetector(
+                      child: CategoryCard(
+                        category: cat.name,
+                      ),
+                    onTap: (){
+                        _AddExpenseIncomeState.cat = cat.name;
+                        _AddExpenseIncomeState.incomeExpense = cat.incomeExpense;
+                        Navigator.pop(context);
+                    },
+                  )
+              );
+            }
+            else{
+              incomeChildren.add(
+                  GestureDetector(
+                    child: CategoryCard(
+                      category: cat.name,
+                    ),
+                    onTap: (){
+                      _AddExpenseIncomeState.cat = cat.name;
+                      _AddExpenseIncomeState.incomeExpense = cat.incomeExpense;
+                      Navigator.pop(context);
+                    },
+                  )
+              );
+            }
+          }
+          if(isExpense){
+            return ListView(
+              children: expenseChildren,
+            );
+          }
+          else{
+            return ListView(
+              children: incomeChildren,
+            );
+          }
+          /*return ListView(
+            children: expenseChildren,
+          );*/
+        }
+        else if(snapshot.hasError){
+          return Text("I have error data");
+        }
+        else{
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    ));
+    //return [Container()];
+  }
+
+
   @override
   Widget build(BuildContext context){
-    return ListView(
-      children: [
-        GestureDetector(
-          child: CategoryCard(category: "Food"),
-          onTap: (){
-            cat.category = "Food";
-            //cat.stateUpdate();
-            Navigator.pop(context);
-          },
+    return Column(
+      children:[
+        Container(
+          height: 60,
+          child: Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      isExpense = true;
+                    });
+                  },
+                  child: Center(
+                    child: Text("Expense",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 25,
+                        backgroundColor: isExpense ? Colors.grey : Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                flex: 1,
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      isExpense = false;
+                    });
+
+                  },
+                    child: Center(
+                      child: Text("Income",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          backgroundColor: isExpense ? Colors.white: Colors.grey,
+                        ),
+                      ),
+                    ),
+                ),
+                flex: 1,
+              )
+            ],
+          ),
         ),
-        GestureDetector(
-          child: CategoryCard(category: "Fruits"),
-          onTap: (){
-            cat.category = "Fruits";
-            //cat.stateUpdate();
-            Navigator.pop(context);
-          },
+        Flexible(
+            child: futureBuilderCat()
         ),
-        GestureDetector(
-          child: CategoryCard(category: "Transportation"),
-          onTap: (){
-            cat.category = "Transportation";
-            //cat.stateUpdate();
-            Navigator.pop(context);
-          },
-        ),
-        GestureDetector(
-          child: CategoryCard(category: "Gym"),
-          onTap: (){
-            cat.category = "Gym";
-            //cat.stateUpdate();
-            Navigator.pop(context);
-          },
-        ),
-        GestureDetector(
-          child: CategoryCard(category: "Gifts"),
-          onTap: (){
-            cat.category = "Gifts";
-            //cat.stateUpdate();
-            Navigator.pop(context);
-          },
-        ),
-        GestureDetector(
-          child: CategoryCard(category: "Travel"),
-          onTap: (){
-            cat.category = "Travel";
-            //cat.stateUpdate();
-            Navigator.pop(context);
-          },
-        ),
-      ],
+        /*ListView(
+          children: [
+            GestureDetector(
+              child: CategoryCard(category: "Food"),
+              onTap: (){
+                _AddExpenseIncomeState.cat = "Food";
+                //cat.stateUpdate();
+                Navigator.pop(context);
+              },
+            ),
+            GestureDetector(
+              child: CategoryCard(category: "Fruits"),
+              onTap: (){
+                _AddExpenseIncomeState.cat = "Fruits";
+                //cat.stateUpdate();
+                Navigator.pop(context);
+              },
+            ),
+            GestureDetector(
+              child: CategoryCard(category: "Transportation"),
+              onTap: (){
+                _AddExpenseIncomeState.cat = "Transportation";
+                //cat.stateUpdate();
+                Navigator.pop(context);
+              },
+            ),
+            GestureDetector(
+              child: CategoryCard(category: "Gym"),
+              onTap: (){
+                _AddExpenseIncomeState.cat  = "Gym";
+                //cat.stateUpdate();
+                Navigator.pop(context);
+              },
+            ),
+            GestureDetector(
+              child: CategoryCard(category: "Gifts"),
+              onTap: (){
+                _AddExpenseIncomeState.cat = "Gifts";
+                //cat.stateUpdate();
+                Navigator.pop(context);
+              },
+            ),
+            GestureDetector(
+              child: CategoryCard(category: "Travel"),
+              onTap: (){
+                _AddExpenseIncomeState.cat = "Travel";
+                //cat.stateUpdate();
+                Navigator.pop(context);
+                setState(() {
+
+                });
+              },
+            ),
+          ],
+        ),*/
+      ]
     );
   }
 }
