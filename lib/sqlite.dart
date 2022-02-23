@@ -22,7 +22,7 @@ class SqliteDb{
       'incomeExpense TEXT,'
       'name TEXT)'
     );
-    await db.execute('CREATE TABLE TRANSACTIONS (id INTEGER PRIMARY KEY,'
+    await db.execute('CREATE TABLE TRANSACTIONS (transactionId INTEGER PRIMARY KEY,'
         'category TEXT,'
         'amount INTEGER,'
         'date TEXT,'
@@ -35,7 +35,7 @@ class SqliteDb{
   static initDb() async{
     String folderPath = await getDatabasesPath();
     String path = join(folderPath, "budget.db");
-
+    //await deleteDatabase(path);
     var dbClient = await openDatabase(
       path,
       version: 2,

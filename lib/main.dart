@@ -1,4 +1,5 @@
 import 'package:budget_app/screens/category_setting.dart';
+import 'package:budget_app/sqlite.dart';
 import 'package:flutter/material.dart';
 import 'package:budget_app/screens/add_expense_income.dart';
 import 'screens/routing.dart' as routing;
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //print(SqliteDb.getAllCategories());
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         routing.categorySettingId: (context) => CategorySetting(),
         routing.chartId: (context) => Chart(),
         routing.addCategoryId: (context) => AddCategory(),
+        //routing.transactionDetailId: (context) => TransactionDetails(),
         }
     );
   }

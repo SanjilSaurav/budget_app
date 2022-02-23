@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:budget_app/screens/add_expense_income.dart';
+//import 'package:budget_app/screens/add_expense_income.dart';
 import 'routing.dart';
-import 'category_setting.dart';
+//import 'category_setting.dart';
+import 'package:budget_app/sqlite.dart';
+import 'package:budget_app/data_model.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -30,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int income = 0;
   int remainingBudget = 0;
   GlobalKey<ScaffoldState> _scaffoldKEy = GlobalKey<ScaffoldState>();
+  Future<List<Transactions>> transactionList = SqliteDb.getAllTransactions();
 
   void _incrementCounter() {
     setState(() {
@@ -41,6 +44,42 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
+
+
+  Widget futureBuilderTransaction(){
+    return(FutureBuilder<List<Transactions>>(
+      future: transactionList,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        /*var data = snapshot.data;
+        List<Widget> children = [];
+        for(var trans in data){
+          children.add(ExpenseIncomeCard(category: trans.incomeExpense, amount: trans.amount));
+        }
+        return ListView(
+          children: children,
+        );
+      }*/
+        if(snapshot.hasData){
+          var data = snapshot.data;
+          List<Widget> children = [];
+          for(var cat in data){
+            children.add(ExpenseIncomeCard(category: cat.category, amount: cat.amount));
+          }
+          return ListView(
+            children: children,
+          );
+        }
+        else if(snapshot.hasError){
+          print(transactionList);
+          return Text("I have error data");
+        }
+        else{
+          return Text("Waiting");
+        }
+      },
+    ));
+  }
+
   void _onTapped(int index){
     setState(() {
       if(index == 0){
@@ -174,14 +213,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Flexible(
-            child: ListView(
+            child: futureBuilderTransaction(),
+            /*ListView(
               children: [
                 ExpenseIncomeCard(category: "Food", amount: 400),
                 ExpenseIncomeCard(category: "Travel", amount: 800),
                 ExpenseIncomeCard(category: "Shopping", amount: 720),
                 ExpenseIncomeCard(category: "Salary", amount: 1200),
               ],
-            ),
+            ),*/
           ),
         ],
       ),
@@ -322,7 +362,7 @@ class ExpenseIncomeCard extends StatelessWidget{
     Key? key,
   }): super(key: key);
   final String category;
-  final double amount;
+  final int amount;
 
   @override
   Widget build(BuildContext context){
@@ -330,23 +370,26 @@ class ExpenseIncomeCard extends StatelessWidget{
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0)
       ),
-    child: Container(
-      padding: EdgeInsets.all(10),
-      height: 70,
-      child: Row(
-        children: [
-          Expanded(
-              child: Text(category)
-          ),
-          Expanded(
-              child: Align(
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Text('$amount'),
-              )
-          ),
-        ],
-      ),
+    child: GestureDetector(
+      onTap: (){},
+      child: Container(
+        padding: EdgeInsets.all(10),
+        height: 70,
+        child: Row(
+          children: [
+            Expanded(
+                child: Text(category)
+            ),
+            Expanded(
+                child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Text('$amount'),
+                )
+            ),
+          ],
+        ),
       )
+    )
     );
   }
 }

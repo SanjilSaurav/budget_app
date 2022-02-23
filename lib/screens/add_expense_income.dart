@@ -18,7 +18,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
   static String cat = "category";
   //double amount= 0;
   //String remark ="";
-  static String incomeExpense = "";
+  static String transactionType = "";
   //var dateFormat = new DateFormat('yyyy-MM-dd');
   //String todayDate = dateFormat.format(date);
 
@@ -30,17 +30,20 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
   Transactions transaction = Transactions(
       category: cat,
       amount: 0,
-      incomeExpense: incomeExpense,
+      incomeExpense: transactionType,
       transactionId: -1,
       date: "",
-      time: ""
+      time: "",
+      remark: ""
   );
 
   void addNewTransaction() async{
+    transaction.category = cat;
+    transaction.incomeExpense = transactionType;
     Map<String, dynamic> transactionAsMap = transaction.toMap();
     transactionAsMap.remove("transactionId");
-    int? transactioinId = await SqliteDb.insertTransaction(transactionAsMap);
-    if(transactioinId == null){
+    int? transactionId = await SqliteDb.insertTransaction(transactionAsMap);
+    if(transactionId == null){
       print("Failed");
     }
     else{
@@ -104,7 +107,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                     Flexible(
                         child: TextField(
                           onChanged: (String value){
-                            transaction.amount = double.parse(value);
+                            transaction.amount = int.parse(value);
                           },
                           textAlign: TextAlign.end,
                           style: TextStyle(fontSize: 25),
@@ -158,7 +161,7 @@ class _AddExpenseIncomeState extends State<AddExpenseIncome>{
                     ),
                     GestureDetector(
                       onTap: () {
-                        print(incomeExpense);
+                        //print(incomeExpense);
                         setState(() {
                           transaction.time = DateFormat.jm().format(DateTime.now()).toString();
                         });
@@ -268,7 +271,7 @@ class _CreateBottomSheetState extends State<CreateBottomSheet>{
                       ),
                     onTap: (){
                         _AddExpenseIncomeState.cat = cat.name;
-                        _AddExpenseIncomeState.incomeExpense = cat.incomeExpense;
+                        _AddExpenseIncomeState.transactionType = cat.incomeExpense;
                         Navigator.pop(context);
                     },
                   )
@@ -282,7 +285,7 @@ class _CreateBottomSheetState extends State<CreateBottomSheet>{
                     ),
                     onTap: (){
                       _AddExpenseIncomeState.cat = cat.name;
-                      _AddExpenseIncomeState.incomeExpense = cat.incomeExpense;
+                      _AddExpenseIncomeState.transactionType = cat.incomeExpense;
                       Navigator.pop(context);
                     },
                   )

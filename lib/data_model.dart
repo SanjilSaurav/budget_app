@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 
 class Transactions{
   Transactions({
@@ -6,16 +6,16 @@ class Transactions{
     required this.amount,
     required this.incomeExpense,
     required this.transactionId,
-    this.remark,
+    required this.remark,
     required this.date,
     required this.time,
 });
   String category;
   int transactionId;
-  double amount;
+  int amount;
   String date;
   String time;
-  String? remark;
+  String remark;
   String incomeExpense;
 
   Map<String, dynamic> toMap(){
