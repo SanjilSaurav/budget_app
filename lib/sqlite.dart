@@ -30,6 +30,11 @@ class SqliteDb{
         'remark TEXT,'
         'incomeExpense TEXT)'
     );
+    await db.execute('CREATE TABLE VARIABLES (variableId INTEGER PRIMARY KEY,'
+        'variable TEXT,'
+        'amount INTEGER,'
+        'category TEXT)'
+    );
   }
 
   static initDb() async{
@@ -77,6 +82,17 @@ class SqliteDb{
     }
   }
 
+  static Future<int?> insertVariable(Map<String, dynamic> newVariable) async{
+    var dbClient = await db;
+    int varId = await dbClient.insert("VARIABLES", newVariable);
+    if(varId != 0){
+      return (varId);
+    }
+    else{
+      return (null);
+    }
+  }
+
   //Reading from tables
   static Future<List<Transactions>> getAllTransactions() async{
     var dbClient = await db;
@@ -99,6 +115,17 @@ class SqliteDb{
     return (categoriesAsObject);
   }
 
+  static Future<List<Variables>> getAllVariables() async{
+    var dbClient = await db;
+    //await Future.delayed(Duration(seconds: 1));
+    List<Map<String, dynamic>> variablesFromDB = await dbClient.query("VARIABLES");
+    List<Variables> variablesAsObject = [];
+    for (var map in variablesFromDB){
+      variablesAsObject.add(Variables.fromMap(map));
+    }
+    return (variablesAsObject);
+  }
+
   //Updating tables
   static Future<bool> updateTransaction(Transactions transaction) async{
     var dbClient = await db;
@@ -118,6 +145,15 @@ class SqliteDb{
     return (changes>0);
   }
 
+  static Future<bool> updateVariable(Variables variable) async{
+    var dbClient = await db;
+    int changes = await dbClient.update("VARIABLES",
+        variable.toMap(),
+        where: "variable = ?",
+        whereArgs: [variable.variable]);
+    return (changes>0);
+  }
+
   //Deleting from tables
   static Future<bool> deleteTransaction(Transactions transaction) async{
     var dbClient = await db;
@@ -132,6 +168,14 @@ class SqliteDb{
     int changes = await dbClient.delete("CATEGORIES",
         where: "categoryId = ?",
         whereArgs: [category.categoryId]);
+    return (changes == 1);
+  }
+
+  static Future<bool> deleteVariable(Variables variable) async{
+    var dbClient = await db;
+    int changes = await dbClient.delete("VARIABLES",
+        where: "variableId = ?",
+        whereArgs: [variable.variableId]);
     return (changes == 1);
   }
 

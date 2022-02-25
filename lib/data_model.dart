@@ -73,3 +73,36 @@ class Categories{
     return categories;
   }
 }
+
+class Variables{
+  Variables({
+    required this.amount,
+    required this.variable,
+    required this.category,
+    required this.variableId,
+  });
+  int variableId;
+  int amount;
+  String variable;
+  String category;
+
+  Map<String, dynamic> toMap(){
+    Map<String, dynamic> variablesAsMap = {
+      "variableId": variableId,
+      "amount": amount,
+      "variable": variable,
+      "category": category
+    };
+    return (variablesAsMap);
+  }
+
+  static Variables fromMap(Map<String, dynamic> varAsMap){
+    Variables variables = Variables(
+      variableId: varAsMap["variableId"],
+      amount: varAsMap["amount"],
+      variable: varAsMap["variable"],
+      category: varAsMap["category"],
+    );
+    return (variables);
+  }
+}

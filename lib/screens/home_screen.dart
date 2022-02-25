@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         }
         else if(snapshot.hasError){
-          print(transactionList);
+          //print(transactionList);
           return Text("I have error data");
         }
         else{
@@ -165,49 +165,54 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Align(
                   alignment: AlignmentDirectional.bottomStart,
-                  child: Container(
-                    padding: const EdgeInsets.all(15),
-                    height: 100,
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text("Budget: "),
-                            Text("$budget",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                  child: GestureDetector(
+                    onTap: (){
+                      print("Go to amount setting");
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      height: 100,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text("Budget: "),
+                              Text("$budget",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const LinearProgressIndicator(
-                          backgroundColor: Colors.red,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                          value: 60.0,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text("Remaining Budget: "),
-                            Text("$remainingBudget",
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const LinearProgressIndicator(
+                            backgroundColor: Colors.red,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                            value: 60.0,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text("Remaining Budget: "),
+                              Text("$remainingBudget",
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  )
                 )
               ],
             ),
